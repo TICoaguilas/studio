@@ -26,7 +26,7 @@ export function ClockStation({ users }: { users: User[] }) {
                 });
             } else if (result?.success) {
                 toast({
-                    title: 'Success',
+                    title: 'Éxito',
                     description: result.message,
                 });
             }
@@ -45,19 +45,19 @@ export function ClockStation({ users }: { users: User[] }) {
                         {user.isClockedIn ? (
                             <Badge variant="outline" className="w-fit mx-auto border-green-500 text-green-700 bg-green-50">
                                 <CheckCircle className="mr-1 h-3 w-3" />
-                                Clocked In
+                                Registrado
                             </Badge>
                         ) : (
                             <Badge variant="secondary" className="w-fit mx-auto">
                                 <XCircle className="mr-1 h-3 w-3 text-muted-foreground" />
-                                Clocked Out
+                                No Registrado
                             </Badge>
                         )}
                         <CardDescription className="pt-2">
                             {user.isClockedIn && user.lastClockIn ? (
-                                `Since ${formatDistanceToNow(new Date(user.lastClockIn), { addSuffix: true })}`
+                                `Desde ${formatDistanceToNow(new Date(user.lastClockIn), { addSuffix: true })}`
                             ) : (
-                                'Ready to start the day'
+                                'Listo para empezar el día'
                             )}
                         </CardDescription>
                     </CardHeader>
@@ -72,11 +72,11 @@ export function ClockStation({ users }: { users: User[] }) {
                                 <Skeleton className="h-4 w-20" />
                              ) : user.isClockedIn ? (
                                 <>
-                                    <LogOut className="mr-2 h-4 w-4" /> Clock Out
+                                    <LogOut className="mr-2 h-4 w-4" /> Salir
                                 </>
                             ) : (
                                 <>
-                                    <LogIn className="mr-2 h-4 w-4" /> Clock In
+                                    <LogIn className="mr-2 h-4 w-4" /> Entrar
                                 </>
                             )}
                         </Button>

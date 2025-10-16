@@ -13,13 +13,13 @@ export function Header() {
                 <div className="flex items-center justify-between h-16">
                     <Link href="/" className="flex items-center gap-3 font-bold text-xl text-primary">
                         {logo && <Image src={logo.imageUrl} alt={logo.description} data-ai-hint={logo.imageHint} width={32} height={32} className="rounded-md" />}
-                        <span className="font-headline">ClockWise</span>
+                        <span className="font-headline">CPG LA MARINA</span>
                     </Link>
                     <nav>
                         <Button asChild variant="ghost">
                             <Link href="/admin">
                                 <BookCopy className="mr-2 h-4 w-4" />
-                                Admin Panel
+                                Panel de Administración
                             </Link>
                         </Button>
                     </nav>

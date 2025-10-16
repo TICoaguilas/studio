@@ -8,7 +8,7 @@ export async function handleClockEvent(userId: string) {
     try {
         const user = await getUserById(userId);
         if (!user) {
-            return { error: 'User not found' };
+            return { error: 'Usuario no encontrado' };
         }
 
         const ip = headers().get('x-forwarded-for') ?? headers().get('remote_addr') ?? '127.0.0.1';
@@ -19,9 +19,10 @@ export async function handleClockEvent(userId: string) {
         revalidatePath('/');
         revalidatePath('/admin');
         
-        return { success: true, message: `Successfully clocked ${eventType}!` };
+        const eventTypeSpanish = eventType === 'in' ? 'entrada' : 'salida';
+        return { success: true, message: `¡Se ha registrado la ${eventTypeSpanish} correctamente!` };
     } catch (error) {
         console.error(error);
-        return { error: 'An unexpected error occurred.' };
+        return { error: 'Ocurrió un error inesperado.' };
     }
 }

@@ -48,7 +48,7 @@ export function DatePickerWithRange({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Filter by date range</span>
+              <span>Filtrar por rango de fechas</span>
             )}
           </Button>
         </PopoverTrigger>

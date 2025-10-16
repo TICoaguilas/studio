@@ -9,8 +9,8 @@ export default async function AdminPage() {
     return (
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
-                <h1 className="text-4xl font-bold font-headline tracking-tight text-primary">Admin Dashboard</h1>
-                <p className="mt-2 text-lg text-muted-foreground">View and export employee time records.</p>
+                <h1 className="text-4xl font-bold font-headline tracking-tight text-primary">Panel de Administración</h1>
+                <p className="mt-2 text-lg text-muted-foreground">Ver y exportar registros de tiempo de los empleados.</p>
             </div>
             <AdminDashboard records={records} userNames={userNames} />
         </main>

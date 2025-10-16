@@ -47,7 +47,7 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     }, [records, dateRange, selectedUser]);
 
     const handleExport = () => {
-        const csvHeader = 'User,Type,Timestamp,IP Address\n';
+        const csvHeader = 'Usuario,Tipo,Marca de Tiempo,Dirección IP\n';
         const csvRows = filteredRecords.map(r => 
             `"${r.userName}","${r.type}","${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}","${r.ipAddress}"`
         ).join('\n');
@@ -75,17 +75,17 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     return (
         <Card className="shadow-lg">
             <CardHeader>
-                <CardTitle>Time Records</CardTitle>
-                <CardDescription>Filter, view, and export clock-in/out history.</CardDescription>
+                <CardTitle>Registros de Tiempo</CardTitle>
+                <CardDescription>Filtra, visualiza y exporta el historial de registros de entrada/salida.</CardDescription>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
                     <DatePickerWithRange date={dateRange} setDate={setDateRange} />
                     <Select value={selectedUser} onValueChange={setSelectedUser}>
                       <SelectTrigger className="w-full sm:w-[200px]">
                         <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                        <SelectValue placeholder="Filter by user" />
+                        <SelectValue placeholder="Filtrar por usuario" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Users</SelectItem>
+                        <SelectItem value="all">Todos los Usuarios</SelectItem>
                         {userNames.map(name => (
                           <SelectItem key={name} value={name}>{name}</SelectItem>
                         ))}
@@ -94,13 +94,13 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                     {hasActiveFilters && (
                       <Button variant="ghost" onClick={clearFilters}>
                         <X className="mr-2 h-4 w-4"/>
-                        Clear
+                        Limpiar
                       </Button>
                     )}
                     <div className="sm:ml-auto">
                       <Button onClick={handleExport} disabled={filteredRecords.length === 0}>
                           <Download className="mr-2 h-4 w-4" />
-                          Export CSV
+                          Exportar CSV
                       </Button>
                     </div>
                 </div>
@@ -110,10 +110,10 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>User</TableHead>
-                                <TableHead className="text-center">Type</TableHead>
-                                <TableHead>Timestamp</TableHead>
-                                <TableHead>IP Address</TableHead>
+                                <TableHead>Usuario</TableHead>
+                                <TableHead className="text-center">Tipo</TableHead>
+                                <TableHead>Marca de Tiempo</TableHead>
+                                <TableHead>Dirección IP</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -123,17 +123,17 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                                         <TableCell className="font-medium">{record.userName}</TableCell>
                                         <TableCell className="text-center">
                                             <Badge variant={record.type === 'in' ? 'default' : 'secondary'} className={record.type === 'in' ? 'bg-green-100 text-green-800 hover:bg-green-200' : ''}>
-                                              {record.type.charAt(0).toUpperCase() + record.type.slice(1)}
+                                              {record.type === 'in' ? 'Entrada' : 'Salida'}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>{format(new Date(record.timestamp), 'MMM d, yyyy, h:mm:ss a')}</TableCell>
+                                        <TableCell>{format(new Date(record.timestamp), 'd MMM, yyyy, h:mm:ss a')}</TableCell>
                                         <TableCell className="font-code text-muted-foreground">{record.ipAddress}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                                        No records match your filters.
+                                        No hay registros que coincidan con tus filtros.
                                     </TableCell>
                                 </TableRow>
                             )}
