@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "ANA ROSA",
+      "isClockedIn": false,
+      "password": "2425"
+    },
+    {
+      "id": "2",
+      "name": "ANTONIO",
+      "isClockedIn": false,
+      "password": "1"
+    },
+    {
+      "id": "3",
+      "name": "MANOLO",
+      "isClockedIn": false,
+      "password": "1"
+    },
+    {
+      "id": "4",
+      "name": "JUANITO",
+      "isClockedIn": false,
+      "password": "1"
+    },
+    {
+      "id": "5",
+      "name": "PEPITO",
+      "isClockedIn": false,
+      "password": "1"
+    }
+  ],
+  "timeRecords": []
+}

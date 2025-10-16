@@ -1,34 +1,58 @@
 import type { User, TimeRecord } from '@/lib/types';
+import fs from 'fs/promises';
+import path from 'path';
 
-// In-memory store
-const users: User[] = [
-    { id: '1', name: 'ANA ROSA', isClockedIn: false, password: '2425' },
-    { id: '2', name: 'ANTONIO', isClockedIn: false, password: '1' },
-    { id: '3', name: 'MANOLO', isClockedIn: false, password: '1' },
-    { id: '4', name: 'JUANITO', isClockedIn: false, password: '1' },
-    { id: '5', name: 'PEPITO', isClockedIn: false, password: '1' },
-];
+const dataFilePath = path.join(process.cwd(), 'src/lib/data.json');
 
-const timeRecords: TimeRecord[] = [];
+type Data = {
+    users: User[];
+    timeRecords: TimeRecord[];
+};
 
-// Data access functions
+const readData = async (): Promise<Data> => {
+    try {
+        const fileContent = await fs.readFile(dataFilePath, 'utf-8');
+        return JSON.parse(fileContent);
+    } catch (error) {
+        // If file doesn't exist, create it with initial data
+        const initialData: Data = {
+            users: [
+                { id: '1', name: 'ANA ROSA', isClockedIn: false, password: '2425' },
+                { id: '2', name: 'ANTONIO', isClockedIn: false, password: '1' },
+                { id: '3', name: 'MANOLO', isClockedIn: false, password: '1' },
+                { id: '4', name: 'JUANITO', isClockedIn: false, password: '1' },
+                { id: '5', name: 'PEPITO', isClockedIn: false, password: '1' },
+            ],
+            timeRecords: []
+        };
+        await writeData(initialData);
+        return initialData;
+    }
+};
+
+const writeData = async (data: Data): Promise<void> => {
+    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+};
+
 export const getUsers = async (): Promise<User[]> => {
-    // Simulate async operation
-    return Promise.resolve(JSON.parse(JSON.stringify(users)));
+    const data = await readData();
+    return data.users;
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
-    const user = users.find(u => u.id === id);
-    return Promise.resolve(user ? JSON.parse(JSON.stringify(user)) : undefined);
+    const data = await readData();
+    return data.users.find(u => u.id === id);
 };
 
 export const getTimeRecords = async (): Promise<TimeRecord[]> => {
-    const sortedRecords = [...timeRecords].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    return Promise.resolve(JSON.parse(JSON.stringify(sortedRecords)));
+    const data = await readData();
+    return data.timeRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };
 
 export const addTimeRecord = async (userId: string, type: 'in' | 'out', ipAddress: string): Promise<TimeRecord> => {
-    const user = await getUserById(userId);
+    const data = await readData();
+    const user = data.users.find(u => u.id === userId);
+
     if (!user) {
         throw new Error('User not found');
     }
@@ -42,16 +66,16 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', ipAddres
         ipAddress,
     };
 
-    timeRecords.push(newRecord);
+    data.timeRecords.push(newRecord);
 
-    // Update user status
-    const userIndex = users.findIndex(u => u.id === userId);
+    const userIndex = data.users.findIndex(u => u.id === userId);
     if (userIndex !== -1) {
-        users[userIndex].isClockedIn = type === 'in';
+        data.users[userIndex].isClockedIn = type === 'in';
         if (type === 'in') {
-            users[userIndex].lastClockIn = newRecord.timestamp;
+            data.users[userIndex].lastClockIn = newRecord.timestamp;
         }
     }
 
-    return Promise.resolve(JSON.parse(JSON.stringify(newRecord)));
+    await writeData(data);
+    return newRecord;
 };
