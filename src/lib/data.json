@@ -3,8 +3,9 @@
     {
       "id": "1",
       "name": "ANA ROSA",
-      "isClockedIn": false,
-      "password": "2425"
+      "isClockedIn": true,
+      "password": "2425",
+      "lastClockIn": "2025-10-16T11:02:59.905Z"
     },
     {
       "id": "2",
@@ -62,6 +63,14 @@
       "userName": "JUANITO",
       "type": "out",
       "timestamp": "2025-10-16T11:01:04.854Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "71390a6f-99ff-4766-aa3a-91b5eeb4f13d",
+      "userId": "1",
+      "userName": "ANA ROSA",
+      "type": "in",
+      "timestamp": "2025-10-16T11:02:59.905Z",
       "ipAddress": "127.0.0.1"
     }
   ]

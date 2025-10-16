@@ -47,9 +47,9 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     }, [records, dateRange, selectedUser]);
 
     const handleExport = () => {
-        const csvHeader = 'Usuario;Tipo;Marca de Tiempo;Dirección IP\n';
+        const csvHeader = 'Usuario;Tipo;Marca de Tiempo\n';
         const csvRows = filteredRecords.map(r => 
-            `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}";"${r.ipAddress}"`
+            `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}"`
         ).join('\n');
 
         const csvContent = csvHeader + csvRows;
@@ -113,7 +113,6 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                                 <TableHead>Usuario</TableHead>
                                 <TableHead className="text-center">Tipo</TableHead>
                                 <TableHead>Marca de Tiempo</TableHead>
-                                <TableHead>Dirección IP</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -127,12 +126,11 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                                             </Badge>
                                         </TableCell>
                                         <TableCell>{format(new Date(record.timestamp), 'd MMM, yyyy, h:mm:ss a')}</TableCell>
-                                        <TableCell className="font-code text-muted-foreground">{record.ipAddress}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                                    <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
                                         No hay registros que coincidan con tus filtros.
                                     </TableCell>
                                 </TableRow>
