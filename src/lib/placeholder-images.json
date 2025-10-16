@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "logo",
+      "description": "ClockWise application logo",
+      "imageUrl": "https://picsum.photos/seed/clockwise/100/100",
+      "imageHint": "logo abstract"
+    }
+  ]
 }
