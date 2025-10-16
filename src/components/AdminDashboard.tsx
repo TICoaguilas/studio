@@ -49,17 +49,17 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     const handleExport = () => {
         const csvHeader = 'Usuario;Tipo;Marca de Tiempo;Dirección IP\n';
         const csvRows = filteredRecords.map(r => 
-            `"${r.userName}";"${r.type}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}";"${r.ipAddress}"`
+            `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}";"${r.ipAddress}"`
         ).join('\n');
 
         const csvContent = csvHeader + csvRows;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         if (link.href) {
             URL.revokeObjectURL(link.href);
         }
         link.href = URL.createObjectURL(blob);
-        link.download = `clockwise_export_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+        link.download = `cpg_la_marina_export_${format(new Date(), 'yyyy-MM-dd')}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

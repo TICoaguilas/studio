@@ -31,5 +31,38 @@
       "password": "1"
     }
   ],
-  "timeRecords": []
+  "timeRecords": [
+    {
+      "id": "d0f6652d-abc1-4cf9-b316-22d6964a912f",
+      "userId": "3",
+      "userName": "MANOLO",
+      "type": "in",
+      "timestamp": "2025-10-16T11:00:26.846Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "417985d1-2425-4f4b-8c19-a22e3935318f",
+      "userId": "4",
+      "userName": "JUANITO",
+      "type": "in",
+      "timestamp": "2025-10-16T11:00:33.016Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "9719451b-b4eb-42d6-afad-451aa774e2f7",
+      "userId": "3",
+      "userName": "MANOLO",
+      "type": "out",
+      "timestamp": "2025-10-16T11:01:01.750Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "f633dc4e-9951-478b-aff9-6836387a47d7",
+      "userId": "4",
+      "userName": "JUANITO",
+      "type": "out",
+      "timestamp": "2025-10-16T11:01:04.854Z",
+      "ipAddress": "127.0.0.1"
+    }
+  ]
 }
