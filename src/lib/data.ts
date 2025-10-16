@@ -2,11 +2,11 @@ import type { User, TimeRecord } from '@/lib/types';
 
 // In-memory store
 const users: User[] = [
-    { id: '1', name: 'ANA ROSA', isClockedIn: false },
-    { id: '2', name: 'ANTONIO', isClockedIn: false },
-    { id: '3', name: 'MANOLO', isClockedIn: false },
-    { id: '4', name: 'JUANITO', isClockedIn: false },
-    { id: '5', name: 'PEPITO', isClockedIn: false },
+    { id: '1', name: 'ANA ROSA', isClockedIn: false, password: '2425' },
+    { id: '2', name: 'ANTONIO', isClockedIn: false, password: '1' },
+    { id: '3', name: 'MANOLO', isClockedIn: false, password: '1' },
+    { id: '4', name: 'JUANITO', isClockedIn: false, password: '1' },
+    { id: '5', name: 'PEPITO', isClockedIn: false, password: '1' },
 ];
 
 const timeRecords: TimeRecord[] = [];

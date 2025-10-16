@@ -3,6 +3,7 @@ export type User = {
   name: string;
   isClockedIn: boolean;
   lastClockIn?: string; // Using ISO string for serialization
+  password?: string;
 };
 
 export type TimeRecord = {
