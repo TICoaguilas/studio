@@ -47,9 +47,9 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     }, [records, dateRange, selectedUser]);
 
     const handleExport = () => {
-        const csvHeader = 'Usuario,Tipo,Marca de Tiempo,Dirección IP\n';
+        const csvHeader = 'Usuario;Tipo;Marca de Tiempo;Dirección IP\n';
         const csvRows = filteredRecords.map(r => 
-            `"${r.userName}","${r.type}","${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}","${r.ipAddress}"`
+            `"${r.userName}";"${r.type}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}";"${r.ipAddress}"`
         ).join('\n');
 
         const csvContent = csvHeader + csvRows;
