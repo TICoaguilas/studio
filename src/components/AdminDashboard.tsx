@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Download, User, X } from 'lucide-react';
+import { Download, User, X, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { type DateRange } from 'react-day-picker';
 import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
@@ -24,6 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 export function AdminDashboard({ records, userNames }: { records: TimeRecord[], userNames:string[] }) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
@@ -45,8 +48,8 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                 return record.userName === selectedUser;
             });
     }, [records, dateRange, selectedUser]);
-
-    const handleExport = () => {
+    
+    const handleExportCSV = () => {
         const csvHeader = 'Usuario;Tipo;Marca de Tiempo\n';
         const csvRows = filteredRecords.map(r => 
             `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}"`
@@ -65,6 +68,24 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
         document.body.removeChild(link);
     };
 
+    const handleExportPDF = () => {
+      const doc = new jsPDF();
+      
+      doc.text("Registros de Tiempo - CPG LA MARINA", 14, 16);
+      
+      (doc as any).autoTable({
+          head: [['Usuario', 'Tipo', 'Marca de Tiempo']],
+          body: filteredRecords.map(r => [
+              r.userName,
+              r.type === 'in' ? 'Entrada' : 'Salida',
+              format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')
+          ]),
+          startY: 22
+      });
+
+      doc.save(`cpg_la_marina_export_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+  };
+
     const clearFilters = () => {
       setDateRange(undefined);
       setSelectedUser('all');
@@ -77,7 +98,7 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
             <CardHeader>
                 <CardTitle>Registros de Tiempo</CardTitle>
                 <CardDescription>Filtra, visualiza y exporta el historial de registros de entrada/salida.</CardDescription>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 pt-4">
                     <DatePickerWithRange date={dateRange} setDate={setDateRange} />
                     <Select value={selectedUser} onValueChange={setSelectedUser}>
                       <SelectTrigger className="w-full sm:w-[200px]">
@@ -97,10 +118,14 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                         Limpiar
                       </Button>
                     )}
-                    <div className="sm:ml-auto">
-                      <Button onClick={handleExport} disabled={filteredRecords.length === 0}>
+                    <div className="flex gap-2 sm:ml-auto">
+                      <Button onClick={handleExportCSV} disabled={filteredRecords.length === 0}>
                           <Download className="mr-2 h-4 w-4" />
                           Exportar CSV
+                      </Button>
+                       <Button onClick={handleExportPDF} disabled={filteredRecords.length === 0} variant="outline">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Exportar PDF
                       </Button>
                     </div>
                 </div>
