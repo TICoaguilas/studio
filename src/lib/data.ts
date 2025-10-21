@@ -65,13 +65,20 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
     return user ? JSON.parse(JSON.stringify(user)) : undefined;
 };
 
+export const getUserByName = async (name: string): Promise<User | undefined> => {
+    const data = await readData();
+    const user = data.users.find(u => u.name === name);
+    return user ? JSON.parse(JSON.stringify(user)) : undefined;
+};
+
+
 export const getTimeRecords = async (): Promise<TimeRecord[]> => {
     const data = await readData();
     const records = data.timeRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     return JSON.parse(JSON.stringify(records));
 };
 
-export const addTimeRecord = async (userId: string, type: 'in' | 'out', ipAddress: string): Promise<TimeRecord> => {
+export const addTimeRecord = async (userId: string, type: 'in' | 'out', timestamp: Date, ipAddress: string): Promise<TimeRecord> => {
     const data = await readData();
     const user = data.users.find(u => u.id === userId);
 
@@ -84,7 +91,7 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', ipAddres
         userId,
         userName: user.name,
         type,
-        timestamp: new Date().toISOString(),
+        timestamp: timestamp.toISOString(),
         ipAddress,
     };
 
@@ -93,9 +100,16 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', ipAddres
 
     const userIndex = newData.users.findIndex((u:User) => u.id === userId);
     if (userIndex !== -1) {
-        newData.users[userIndex].isClockedIn = type === 'in';
-        if (type === 'in') {
-            newData.users[userIndex].lastClockIn = newRecord.timestamp;
+        
+        const latestRecord = newData.timeRecords
+            .filter((r: TimeRecord) => r.userId === userId)
+            .sort((a: TimeRecord, b: TimeRecord) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
+
+        if (latestRecord.id === newRecord.id) {
+            newData.users[userIndex].isClockedIn = type === 'in';
+            if (type === 'in') {
+                newData.users[userIndex].lastClockIn = newRecord.timestamp;
+            }
         }
     }
 
