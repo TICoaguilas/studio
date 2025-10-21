@@ -2,10 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { AdminDashboard } from '@/components/AdminDashboard';
-import { getTimeRecords, getUsers } from '@/lib/data';
 import type { TimeRecord, User } from '@/lib/types';
 import { LoginAdmin } from '@/components/LoginAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+
+async function fetchAdminData() {
+    const res = await fetch('/api/admin-data');
+    if (!res.ok) {
+        throw new Error('Failed to fetch admin data');
+    }
+    return res.json();
+}
+
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,10 +24,11 @@ export default function AdminPage() {
 
     useEffect(() => {
         async function loadData() {
+            setLoading(true);
             try {
-                const [loadedRecords, loadedUsers] = await Promise.all([getTimeRecords(), getUsers()]);
+                const { records: loadedRecords, users: loadedUsers } = await fetchAdminData();
                 setRecords(loadedRecords);
-                setUsers(loadedUsers.map(u => ({...u, name: u.name})));
+                setUsers(loadedUsers.map((u:User) => ({...u, name: u.name})));
             } catch (error) {
                 console.error("Failed to load data", error);
             } finally {
@@ -28,10 +38,12 @@ export default function AdminPage() {
 
         if (isAuthenticated) {
             loadData();
+        } else {
+            setLoading(false);
         }
     }, [isAuthenticated]);
     
-    if (loading && isAuthenticated) {
+    if (loading) {
         return (
             <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
