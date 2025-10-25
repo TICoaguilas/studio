@@ -98,7 +98,7 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', timestam
         ipAddress,
     };
 
-    const newData = JSON.parse(JSON.stringify(data));
+    const newData: Data = JSON.parse(JSON.stringify(data));
     newData.timeRecords.push(newRecord);
 
     const userIndex = newData.users.findIndex((u:User) => u.id === userId);
