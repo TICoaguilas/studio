@@ -1,20 +1,58 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { ClockStation } from '@/components/ClockStation';
-import { getUsers } from '@/lib/data';
+import type { User } from '@/lib/types';
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default async function Home() {
-    const users = await getUsers();
+async function fetchUsers() {
+    const res = await fetch('/api/users');
+    if (!res.ok) {
+        throw new Error('Failed to fetch users');
+    }
+    return res.json();
+}
 
-    return (
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight text-primary">
-                    CPG LA MARINA
-                </h1>
-                <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Selecciona tu nombre para registrar tu entrada o salida.
-                </p>
-            </div>
-            <ClockStation users={users} />
-        </main>
-    );
+
+export default function Home() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+      } catch (error) {
+          console.error("Failed to load users", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  return (
+    <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight text-primary">
+          CPG LA MARINA
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+          Selecciona tu nombre para registrar tu entrada o salida.
+        </p>
+      </div>
+       {loading ? (
+          <div className="max-w-md mx-auto space-y-6">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+          </div>
+        ) : (
+          <ClockStation users={users} />
+        )}
+    </main>
+  );
 }
