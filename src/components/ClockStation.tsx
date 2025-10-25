@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import type { User } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,13 +12,16 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from './ui/skeleton';
 import { Label } from './ui/label';
 
-export function ClockStation({ users }: { users: User[] }) {
+export function ClockStation({ users, onClockSuccess }: { users: User[], onClockSuccess: () => void }) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
     const [selectedUserId, setSelectedUserId] = useState<string | undefined>();
     const [password, setPassword] = useState('');
+    const [selectedUser, setSelectedUser] = useState<User | undefined>();
 
-    const selectedUser = users.find(u => u.id === selectedUserId);
+    useEffect(() => {
+        setSelectedUser(users.find(u => u.id === selectedUserId));
+    }, [selectedUserId, users]);
 
     const onClockSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,6 +47,7 @@ export function ClockStation({ users }: { users: User[] }) {
                     title: 'Éxito',
                     description: result.message,
                 });
+                onClockSuccess();
                 // Reset form
                 setSelectedUserId(undefined);
                 setPassword('');

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ClockStation } from '@/components/ClockStation';
 import type { User } from '@/lib/types';
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,26 +13,25 @@ async function fetchUsers() {
     return res.json();
 }
 
-
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        const usersData = await fetchUsers();
-        setUsers(usersData);
-      } catch (error) {
-          console.error("Failed to load users", error);
-      } finally {
-        setLoading(false);
-      }
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const usersData = await fetchUsers();
+      setUsers(usersData);
+    } catch (error) {
+        console.error("Failed to load users", error);
+    } finally {
+      setLoading(false);
     }
-
-    loadData();
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   return (
     <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -51,7 +50,7 @@ export default function Home() {
               <Skeleton className="h-10 w-full" />
           </div>
         ) : (
-          <ClockStation users={users} />
+          <ClockStation users={users} onClockSuccess={loadData} />
         )}
     </main>
   );
