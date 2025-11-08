@@ -3,7 +3,7 @@
     {
       "id": "1",
       "name": "ANA ROSA",
-      "isClockedIn": true,
+      "isClockedIn": false,
       "password": "2425",
       "lastClockIn": "2025-10-20T09:26:52.070Z"
     },
@@ -23,7 +23,7 @@
     {
       "id": "4",
       "name": "JUANITO",
-      "isClockedIn": true,
+      "isClockedIn": false,
       "password": "1",
       "lastClockIn": "2025-10-20T08:44:10.396Z"
     },
@@ -129,6 +129,22 @@
       "userName": "ANTONIO",
       "type": "out",
       "timestamp": "2025-10-20T09:26:57.676Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "c55376ca-bba2-4762-8dfe-43251b9f2fea",
+      "userId": "4",
+      "userName": "JUANITO",
+      "type": "out",
+      "timestamp": "2025-10-25T07:29:37.740Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "462cab2a-56ab-454e-9fc3-fac275f4fdb7",
+      "userId": "1",
+      "userName": "ANA ROSA",
+      "type": "out",
+      "timestamp": "2025-10-25T07:29:43.845Z",
       "ipAddress": "127.0.0.1"
     }
   ]
