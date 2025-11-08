@@ -162,6 +162,16 @@
       "type": "out",
       "timestamp": "2025-11-08T07:09:14.408Z",
       "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "099a4966-fdba-4bb2-9606-8b50011dbbb7",
+      "userId": "5",
+      "userName": "PEPITO",
+      "type": "in",
+      "timestamp": "2025-11-08T07:46:19.632Z",
+      "ipAddress": "127.0.0.1",
+      "latitude": 37.4207613,
+      "longitude": -1.5868799
     }
   ]
 }
