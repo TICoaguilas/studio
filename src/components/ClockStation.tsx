@@ -20,7 +20,8 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
     const [selectedUser, setSelectedUser] = useState<User | undefined>();
 
     useEffect(() => {
-        setSelectedUser(users.find(u => u.id === selectedUserId));
+        const user = users.find(u => u.id === selectedUserId);
+        setSelectedUser(user);
     }, [selectedUserId, users]);
 
     const onClockSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,8 +56,8 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
                     description: 'No se pudo obtener tu ubicación. Por favor, activa los permisos de ubicación para tu navegador.',
                     variant: 'destructive',
                 });
-                // Optional: allow clocking in without location
-                // startClockTransition(); 
+                // Optional: allow clocking in without location by calling startClockTransition()
+                // For this app, we will require location.
             }
         );
     };
@@ -77,6 +78,7 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
                     title: 'Éxito',
                     description: result.message,
                 });
+                // This will trigger a data reload on the parent page
                 onClockSuccess();
                 // Reset form
                 setSelectedUserId(undefined);
@@ -145,7 +147,7 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
                         variant={selectedUser?.isClockedIn ? 'destructive' : 'default'}
                     >
                         {isPending ? (
-                            <Skeleton className="h-4 w-20" />
+                            "Procesando..."
                         ) : selectedUser ? (
                             selectedUser.isClockedIn ? (
                                 <>
