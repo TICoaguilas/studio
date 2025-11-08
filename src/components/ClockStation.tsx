@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LogIn, LogOut, User as UserIcon, CheckCircle, XCircle } from 'lucide-react';
+import { LogIn, LogOut, User as UserIcon, CheckCircle, XCircle, MapPin } from 'lucide-react';
 import { handleClockEvent } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from './ui/skeleton';
@@ -33,9 +33,39 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
             });
             return;
         }
-        
+
+        if (!navigator.geolocation) {
+             toast({
+                title: 'Error de geolocalización',
+                description: 'La geolocalización no es compatible con tu navegador.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                startClockTransition({ latitude, longitude });
+            },
+            (error) => {
+                console.error("Geolocation error:", error);
+                toast({
+                    title: 'Error de ubicación',
+                    description: 'No se pudo obtener tu ubicación. Por favor, activa los permisos de ubicación para tu navegador.',
+                    variant: 'destructive',
+                });
+                // Optional: allow clocking in without location
+                // startClockTransition(); 
+            }
+        );
+    };
+
+    const startClockTransition = (location?: { latitude: number; longitude: number }) => {
+        if (!selectedUserId) return;
+
         startTransition(async () => {
-            const result = await handleClockEvent(selectedUserId, password);
+            const result = await handleClockEvent(selectedUserId, password, location);
             if (result?.error) {
                 toast({
                     title: 'Error',
@@ -53,14 +83,14 @@ export function ClockStation({ users, onClockSuccess }: { users: User[], onClock
                 setPassword('');
             }
         });
-    };
+    }
 
     return (
         <Card className="max-w-md mx-auto shadow-lg">
             <CardHeader>
                 <CardTitle className="text-center text-2xl font-headline">Registrar Movimiento</CardTitle>
                 <CardDescription className="text-center">
-                    Selecciona tu nombre e introduce tu contraseña para fichar.
+                    Selecciona tu nombre e introduce tu contraseña para fichar. Se requerirá tu ubicación.
                 </CardDescription>
             </CardHeader>
             <CardContent>

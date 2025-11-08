@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Download, User, X, FileText } from 'lucide-react';
+import { Download, User, X, FileText, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { type DateRange } from 'react-day-picker';
 import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
@@ -50,9 +50,9 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
     }, [records, dateRange, selectedUser]);
     
     const handleExportCSV = () => {
-        const csvHeader = 'Usuario;Tipo;Marca de Tiempo\n';
+        const csvHeader = 'Usuario;Tipo;Marca de Tiempo;Ubicacion\n';
         const csvRows = filteredRecords.map(r => 
-            `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}"`
+            `"${r.userName}";"${r.type === 'in' ? 'Entrada' : 'Salida'}";"${format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')}";"${r.latitude && r.longitude ? `${r.latitude},${r.longitude}` : 'N/A'}"`
         ).join('\n');
 
         const csvContent = csvHeader + csvRows;
@@ -74,11 +74,12 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
       doc.text("Registros de Tiempo - CPG LA MARINA", 14, 16);
       
       (doc as any).autoTable({
-          head: [['Usuario', 'Tipo', 'Marca de Tiempo']],
+          head: [['Usuario', 'Tipo', 'Marca de Tiempo', 'Ubicación']],
           body: filteredRecords.map(r => [
               r.userName,
               r.type === 'in' ? 'Entrada' : 'Salida',
-              format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss')
+              format(new Date(r.timestamp), 'yyyy-MM-dd HH:mm:ss'),
+              r.latitude && r.longitude ? `${r.latitude.toFixed(5)}, ${r.longitude.toFixed(5)}` : 'N/A'
           ]),
           startY: 22
       });
@@ -148,6 +149,7 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                                     <TableHead>Usuario</TableHead>
                                     <TableHead className="text-center">Tipo</TableHead>
                                     <TableHead>Marca de Tiempo</TableHead>
+                                    <TableHead>Ubicación</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -161,11 +163,26 @@ export function AdminDashboard({ records, userNames }: { records: TimeRecord[], 
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>{format(new Date(record.timestamp), 'd MMM, yyyy, h:mm:ss a')}</TableCell>
+                                            <TableCell>
+                                                {record.latitude && record.longitude ? (
+                                                    <a
+                                                        href={`https://www.google.com/maps/search/?api=1&query=${record.latitude},${record.longitude}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 text-primary hover:underline"
+                                                    >
+                                                        <MapPin className="h-4 w-4" />
+                                                        Ver mapa
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-muted-foreground">N/A</span>
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+                                        <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
                                             No hay registros que coincidan con tus filtros.
                                         </TableCell>
                                     </TableRow>

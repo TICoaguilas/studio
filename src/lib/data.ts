@@ -98,7 +98,14 @@ export const getTimeRecords = async (): Promise<TimeRecord[]> => {
     return JSON.parse(JSON.stringify(records));
 };
 
-export const addTimeRecord = async (userId: string, type: 'in' | 'out', timestamp: Date, ipAddress: string): Promise<TimeRecord> => {
+export const addTimeRecord = async (
+    userId: string, 
+    type: 'in' | 'out', 
+    timestamp: Date, 
+    ipAddress: string,
+    latitude?: number,
+    longitude?: number
+): Promise<TimeRecord> => {
     const data = await readData();
     const user = data.users.find(u => u.id === userId);
 
@@ -113,6 +120,8 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', timestam
         type,
         timestamp: timestamp.toISOString(),
         ipAddress,
+        latitude,
+        longitude,
     };
 
     const newData: Data = JSON.parse(JSON.stringify(data));
@@ -120,8 +129,7 @@ export const addTimeRecord = async (userId: string, type: 'in' | 'out', timestam
 
     const userIndex = newData.users.findIndex((u:User) => u.id === userId);
     if (userIndex !== -1) {
-        // We no longer store isClockedIn in the file, but we update lastClockIn
-        newData.users[userIndex].isClockedIn = type === 'in'; // This will be recalculated on next read anyway
+        // This is a calculated property, so we don't store it but we update lastClockIn
         newData.users[userIndex].lastClockIn = newRecord.timestamp;
     }
 

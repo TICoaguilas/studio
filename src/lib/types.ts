@@ -13,4 +13,6 @@ export type TimeRecord = {
   type: 'in' | 'out';
   timestamp: string; // Using ISO string for serialization
   ipAddress: string;
+  latitude?: number;
+  longitude?: number;
 };

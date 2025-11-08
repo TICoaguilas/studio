@@ -4,7 +4,7 @@ import { addTimeRecord, getUserById, getUserByName } from '@/lib/data';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-export async function handleClockEvent(userId: string, password?: string) {
+export async function handleClockEvent(userId: string, password?: string, location?: { latitude: number; longitude: number }) {
     try {
         const user = await getUserById(userId);
         if (!user) {
@@ -18,7 +18,7 @@ export async function handleClockEvent(userId: string, password?: string) {
         const ip = headers().get('x-forwarded-for') ?? headers().get('remote_addr') ?? '127.0.0.1';
         const eventType = user.isClockedIn ? 'out' : 'in';
         
-        await addTimeRecord(userId, eventType, new Date(), ip);
+        await addTimeRecord(userId, eventType, new Date(), ip, location?.latitude, location?.longitude);
 
         revalidatePath('/');
         revalidatePath('/admin');
